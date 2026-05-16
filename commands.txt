@@ -1,0 +1,16 @@
+cd /mnt/c/users/леонид/desktop/учеба/2сем/micro/deploy
+
+docker compose start
+
+docker compose stop
+
+./scripts/set-lb-mode.sh active-active
+
+./scripts/set-lb-mode.sh active-passive
+
+seq 10 | xargs -I{} -P10 sh -c 'curl -s -D - -o /dev/null http://localhost/s/test | grep -i "X-Service-Instance\|X-LB-Mode"'
+
+docker compose stop links-service
+docker compose startlinks-service
+
+docker compose up -d --build
